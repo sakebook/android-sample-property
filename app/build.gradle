@@ -28,13 +28,13 @@ android {
     productFlavors {
         production {
             buildConfigField "String", "STR", '"'+str+'"'
-            buildConfigField "int", "UINT", ""+uint+""
-            buildConfigField "boolean", "BOOL", ""+bool+""
+            buildConfigField "int", "UINT", String.valueOf(uint)
+            buildConfigField "boolean", "BOOL", String.valueOf(bool)
         }
         log {
             buildConfigField "String", "STR", '"'+str+'"'
-            buildConfigField "int", "UINT", ""+uint+""
-            buildConfigField "boolean", "BOOL", ""+bool+""
+            buildConfigField "int", "UINT", String.valueOf(uint)
+            buildConfigField "boolean", "BOOL", String.valueOf(bool)
         }
     }
 
