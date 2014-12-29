@@ -1,6 +1,6 @@
-def str = parent.hasProperty("str") ? parent.property("str") : ""
-def uint = parent.hasProperty("uint") ? parent.property("uint") : 0
-def bool = parent.hasProperty("bool")
+def str = project.hasProperty("str") ? project.property("str") : ""
+def uint = project.hasProperty("uint") ? project.property("uint") : 0
+def bool = project.hasProperty("bool")
 
 apply plugin: 'com.android.application'
 
