@@ -1,3 +1,7 @@
+def str = parent.hasProperty("str") ? parent.property("str") : ""
+def uint = parent.hasProperty("uint") ? parent.property("uint") : 0
+def bool = parent.hasProperty("bool")
+
 apply plugin: 'com.android.application'
 
 android {
@@ -11,12 +15,58 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    signingConfigs {
+        release {
+            storeFile file("../debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+    }
+
+    productFlavors {
+        production {
+            buildConfigField "String", "STR", '"'+str+'"'
+            buildConfigField "int", "UINT", ""+uint+""
+            buildConfigField "boolean", "BOOL", ""+bool+""
+        }
+        log {
+            buildConfigField "String", "STR", '"'+str+'"'
+            buildConfigField "int", "UINT", ""+uint+""
+            buildConfigField "boolean", "BOOL", ""+bool+""
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix '.dev'
         }
     }
+
+    applicationVariants.all() {
+        def output = outputs.get(0).outputFile
+        println output.dump()
+        if (buildType.name.equals("release") && flavorName.equals("production")) {
+            outputs.get(0).outputFile = new File(output.parentFile, getProdApkName())
+        }
+        if (buildType.name.equals("debug") && flavorName.equals("log")) {
+            outputs.get(0).outputFile = new File(output.parentFile, getDevApkName())
+        }
+    }
+}
+
+def getDevApkName() {
+    return android.defaultConfig.applicationId + android.buildTypes.debug.applicationIdSuffix + ".apk";
+}
+
+def getProdApkName() {
+    return rootProject.name + "-" + android.defaultConfig.versionName + "-" + android.defaultConfig.versionCode + ".apk";
 }
 
 dependencies {
